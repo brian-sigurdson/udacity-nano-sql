@@ -1,0 +1,91 @@
+# sub queries
+# 1
+select date_trunc('day', w.occurred_at) as day, w.channel as channel, count(*) as event_count
+from web_events w
+group by 1, 2
+order by 3 desc
+
+# 2
+-- num events for each day for each channel
+select date_trunc('day', w.occurred_at) as day, w.channel as channel, count(*) as event_count
+from web_events w
+group by 1, 2
+order by 3 desc
+
+# 3
+# good one, but brain dead when I finally got it.
+-- avg events per channel
+select sub.channel, round(avg(sub.event_count),2)
+from (
+	-- number of events for each day for each channel
+	select date_trunc('day', w.occurred_at) as day, w.channel as channel, count(*) as event_count
+	from web_events w
+	group by 1, 2
+	order by 3 desc
+) sub
+group by 1
+
+
+# 2021-8-1
+# 1
+select *
+ from orders
+ where date_trunc('month', occurred_at) =
+       (
+           select min(date_trunc('month', occurred_at))
+           from orders
+       )
+
+
+# 2
+select sum(total_amt_usd) as avg_total, avg(standard_qty) as avg_std, avg(gloss_qty) as avg_gloss, avg(poster_qty) as avg_poster
+ from orders
+ where date_trunc('month', occurred_at) =
+       (
+           select min(date_trunc('month', occurred_at))
+           from orders
+       )
+
+# 3
+SELECT a.id, a.name, w.channel, count(*) as count
+FROM accounts a
+JOIN web_events w on a.id = w.account_id
+GROUP BY 1,2,3
+ORDER BY 1,3
+
+# 4
+select t1.id, t1.name, max(t1.count) as max_cnt
+from
+    (
+        SELECT a.id, a.name, w.channel, count(*) as count
+        FROM accounts a
+        JOIN web_events w on a.id = w.account_id
+        GROUP BY 1,2,3
+        ORDER BY 1,3
+        ) as t1
+group by 1,2
+order by 1
+
+# 5
+select t3.id, t3.name, t3.channel, t3.count
+from(
+    SELECT a.id, a.name, w.channel, count(*) as count
+    FROM accounts a
+    JOIN web_events w on a.id = w.account_id
+    GROUP BY 1,2,3
+    ORDER BY 1,3
+    ) as t3
+join(
+    select t1.id, t1.name, max(t1.count) as max_cnt
+    from(
+        SELECT a.id, a.name, w.channel, count(*) as count
+        FROM accounts a
+        JOIN web_events w on a.id = w.account_id
+        GROUP BY 1,2,3
+        ORDER BY 1,3
+        ) as t1
+    group by 1,2
+    order by 1
+    ) as t2
+on t2.id = t3.id and t2.max_cnt = t3.count
+

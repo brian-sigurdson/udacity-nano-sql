@@ -1,0 +1,134 @@
+# In my opinion, the wording of the questions is quite poor at times.
+# Understanding what was being asked, felt like half of the battle.
+
+# 1
+-- Provide the name of the sales_rep in each region with the largest amount of total_amt_usd sales.
+select t3.region_name, t3.rep_name, t3.total_sales
+from (
+         -- sales for region by rep
+         select r.name as region_name, sr.name as rep_name, sum(o.total_amt_usd) total_sales
+         from accounts a
+                  join orders o on a.id = o.account_id
+                  join sales_reps sr on a.sales_rep_id = sr.id
+                  join region r on sr.region_id = r.id
+         group by 1, 2
+     ) as t3
+join (
+        select t1.region_name, max(t1.total_sales) as total_sales
+        from (
+             -- sales for region by rep
+             select r.name as region_name, sr.name as rep_name, sum(o.total_amt_usd) total_sales
+             from accounts a
+                      join orders o on a.id = o.account_id
+                      join sales_reps sr on a.sales_rep_id = sr.id
+                      join region r on sr.region_id = r.id
+             group by 1, 2
+         ) as t1
+        group by 1
+    ) as t2
+on t3.region_name = t2.region_name and t2.total_sales = t3.total_sales
+
+
+# 2
+ -- For the region with the largest (sum) of sales total_amt_usd, how many total (count) orders were placed?
+ select r.name as region_name, count(o.total) as ttl_cnt
+ from orders o
+          join accounts a on o.account_id = a.id
+          join sales_reps s on a.sales_rep_id = s.id
+          join region r on s.region_id = r.id
+ where r.name =
+       (
+            select t1.name
+            from (
+                     -- region with the most sales
+                     select r.name, sum(o.total_amt_usd) as ttl_sls
+                     from orders o
+                              join accounts a on o.account_id = a.id
+                              join sales_reps s on a.sales_rep_id = s.id
+                              join region r on s.region_id = r.id
+                     group by 1
+                     order by 2 desc
+                     limit 1
+                 ) as t1
+       )
+group by 1
+
+
+# 3
+-- this question seems poorly worded.
+-- How many accounts had more total purchases than the account name which has bought the most standard_qty paper 
+-- throughout their lifetime as a customer?
+select a.name, sum(o.total) as total_qty
+from orders o
+join accounts a on a.id = o.account_id
+group by 1
+having sum(o.total) > (
+    -- what is the max standard_qty purchased by an account
+    select t1.ttl_qty
+    from (
+             -- which account has bought the most standard_qty paper throughout their lifetime as a customer?
+             select a.name, sum(o.standard_qty) as max_std_qty, sum(o.total) as ttl_qty
+             from orders o
+                      join accounts a on o.account_id = a.id
+             group by 1
+             order by 2 desc
+             limit 1
+         ) as t1
+)
+
+
+# 4
+-- For the customer that spent the most (in total over their lifetime as a customer) total_amt_usd, 
+-- how many web_events did they have for each channel?
+select a.name, a.id, we.channel, count(*) as cnt
+from accounts a
+join web_events we on a.id = we.account_id
+where a.id =
+      (
+        -- the id of the customer with the max total spending
+        select t1.id
+        from (
+                 -- the customer with the max total spending
+                 select a.name, a.id, sum(o.total_amt_usd)
+                 from orders o
+                          join accounts a on a.id = o.account_id
+                 group by 1, 2
+                 order by 3 desc
+                 limit 1
+             ) as t1
+          )
+group by 1,2,3
+
+
+# 5
+-- What is the lifetime average amount spent in terms of total_amt_usd for the top 10 total spending accounts?
+select avg(t2.total_sls_usd) as avg_sls_for_top_10
+from
+    (
+         -- top 10 accounts by total spending
+         select a.id, a.name, sum(o.total_amt_usd) as total_sls_usd
+         from accounts a
+                  join orders o on a.id = o.account_id
+         group by 1,2
+         order by 3 desc
+         limit 10
+    ) as t2
+
+
+
+# 6
+-- What is the lifetime average amount spent in terms of total_amt_usd, including only the companies that spent more per
+-- order, on average, than the average of all orders.
+select avg(tmp.avg_sls_for_company)
+from (
+         select a.name, round(avg(o.total_amt_usd),2) as avg_sls_for_company
+         from orders o
+                  join accounts a on a.id = o.account_id
+         group by 1
+         having round(avg(o.total_amt_usd), 2) >
+                (
+                    -- average total_amt_usd per order for all orders
+                    select round(avg(o1.total_amt_usd), 2) as avg_ttl_per_order
+                    from orders o1
+                )
+     ) tmp

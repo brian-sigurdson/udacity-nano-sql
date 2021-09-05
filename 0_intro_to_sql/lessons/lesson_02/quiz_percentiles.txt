@@ -1,0 +1,50 @@
+# compare percentiles
+# 1
+-- Use the NTILE functionality to divide the accounts into 4 levels in terms of the amount of standard_qty for their orders.
+-- Your resulting table should have
+--      the account_id,
+--      the occurred_at time for each order,
+--      the total amount of standard_qty paper purchased,
+--      and one of four levels in a standard_quartile column.
+
+-- The course solution used partition by account_id, but that doesn't really make sense, because we are not
+-- grouping by account.
+
+select account_id, occurred_at, standard_qty, ntile(4) over (order by standard_qty) as standard_quartile
+from orders
+order by standard_quartile desc
+
+
+# 2
+-- Use the NTILE functionality to divide the accounts into two levels in terms of the amount of gloss_qty for their orders.
+-- Your resulting table should have
+--      the account_id,
+--      the occurred_at time for each order,
+--      the total amount of gloss_qty paper purchased,
+--      and one of two levels in a gloss_half column.
+
+-- The course solution used partition by account_id, but that doesn't really make sense, because we are not
+-- grouping by account.
+
+select account_id, occurred_at, gloss_qty, ntile(2) over ( order by gloss_qty) as gloss_half
+from orders
+order by gloss_half desc
+
+
+# 3
+-- Use the NTILE functionality to divide the orders for each account into 100 levels in terms of the amount
+-- of total_amt_usd for their orders.
+-- Your resulting table should have
+--      the account_id,
+--      the occurred_at time for each order,
+--      the total amount of total_amt_usd paper purchased,
+--      and one of 100 levels in a total_percentile column.
+
+-- The course solution used partition by account_id, but that doesn't really make sense, because we are not
+-- grouping by account.
+
+select account_id, occurred_at, total_amt_usd, ntile(100) over (order by total_amt_usd) as total_percentile
+from orders
+order by total_percentile desc
+
+

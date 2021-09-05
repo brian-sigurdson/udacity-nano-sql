@@ -1,0 +1,91 @@
+# having clause
+# 1
+select s.name, count(*) num_accts
+from sales_reps s
+join accounts a
+on s.id = a.sales_rep_id
+group by 1
+having count(*) > 5
+
+# 2
+select a.name as account_name, count(o.id) as order_id
+from accounts a
+join orders o
+on a.id = o.account_id
+group by account_name
+having count(o.id) > 20
+
+# 3
+select a.name as account_name, count(o.id) as order_id
+from accounts a
+join orders o
+on a.id = o.account_id
+group by account_name
+having count(o.id) > 20
+order by order_id desc
+limit 1
+
+# 4
+select a.name as account_name, sum(o.total_amt_usd) total_usd
+from accounts a
+join orders o
+on a.id = o.account_id
+group by a.name
+having sum(o.total_amt_usd) > 30000
+order by total_usd desc
+
+# 5
+select a.name as account_name, sum(o.total_amt_usd) total_usd
+from accounts a
+join orders o
+on a.id = o.account_id
+group by a.name
+having sum(o.total_amt_usd) < 10000
+order by total_usd desc
+
+# 6
+select a.name as account_name, sum(o.total_amt_usd) total_usd
+from accounts a
+join orders o
+on a.id = o.account_id
+group by a.name
+order by total_usd desc
+limit 1
+
+# 7
+select a.name as account_name, sum(o.total_amt_usd) total_usd
+from accounts a
+join orders o
+on a.id = o.account_id
+group by a.name
+order by total_usd asc
+limit 1
+
+# 8
+select a.name as account_name, w.channel, count(w.channel) channel_cnt
+from accounts a
+join web_events w
+on a.id = w.account_id
+where w.channel = 'facebook'
+group by a.name, w.channel
+having count(w.channel)> 6
+
+# 9
+select a.name as account_name, w.channel, count(w.channel) channel_cnt
+from accounts a
+join web_events w
+on a.id = w.account_id
+where w.channel = 'facebook'
+group by a.name, w.channel
+order by channel_cnt desc
+limit 1
+
+# 10
+select a.name as account_name, w.channel as channel_name, count(w.channel) channel_cnt
+from accounts a
+join web_events w
+on a.id = w.account_id
+group by a.name, w.channel
+order by channel_cnt desc, channel_name, account_name
+limit 10
+

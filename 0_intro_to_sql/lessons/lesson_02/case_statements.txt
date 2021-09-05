@@ -1,0 +1,71 @@
+# working with case statements 
+# 1
+select o.id as order_id, a.id as account_id, sum(o.total_amt_usd) as total_sales, 
+	case when sum(o.total_amt_usd) >= 3000 then 'Large' else 'Small' end as order_size
+from accounts a
+join orders o
+on a.id = o.account_id
+group by 1, 2
+order by 3 desc, 1, 2
+
+#2
+select case 
+	when total > 2000 then 'At Least 2000'
+	when total between 1000 and 2000 then 'Between 1000 and 2000'
+	else 'Less than 1000' end as order_size
+	, count(*) as count
+from orders
+group by 1
+
+# 3
+select a.name, sum(o.total_amt_usd) total_sales,
+	case 
+		when sum(o.total_amt_usd) > 200000 then '200,000+'
+		when sum(o.total_amt_usd) between 100000 and 200000 then 'Between 100,000 and 200,000'
+		else 'Under 100,000' 
+	end as group_level
+from accounts a
+join orders o
+on a.id = o.account_id
+group by 1
+order by 2 desc
+
+# 4
+select a.name, sum(o.total_amt_usd) total_sales,
+	case 
+		when sum(o.total_amt_usd) > 200000 then '200,000+'
+		when sum(o.total_amt_usd) between 100000 and 200000 then 'Between 100,000 and 200,000'
+		else 'Under 100,000' 
+	end as group_level
+from accounts a
+join orders o
+on a.id = o.account_id
+where date_part('year', o.occurred_at) in (2016, 2017)
+group by 1
+order by 2 desc
+
+# 5
+select s.name as rep_name, count(o.id) as order_count, case when count(o.id) > 200 then 'Top' else 'Not' end as rep_level
+from sales_reps s
+join accounts a
+on s.id =a.sales_rep_id
+join orders o
+on a.id = o.account_id
+group by 1
+order by 2 desc
+
+# 6
+select s.name as rep_name, count(o.id) as order_count, sum(o.total_amt_usd) as total_sales, 
+	case 
+		when count(o.id) > 200 or sum(o.total_amt_usd) > 750000 then 'top' 
+		when count(o.id) > 150 or sum(o.total_amt_usd) > 500000 then 'middle' 
+		else 'Low' 
+	end as rep_level
+from sales_reps s
+join accounts a
+on s.id =a.sales_rep_id
+join orders o
+on a.id = o.account_id
+group by 1
+order by 3 desc
+

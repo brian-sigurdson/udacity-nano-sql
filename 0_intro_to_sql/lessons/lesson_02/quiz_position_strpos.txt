@@ -1,0 +1,15 @@
+# position and strpos
+
+# 1
+-- Use the accounts table to create first and last name columns that hold the first and last names for the primary_poc.
+
+select left(a.primary_poc, strpos(a.primary_poc, ' ') - 1) as first_name, substr(a.primary_poc, strpos(a.primary_poc, ' ')) as last_name
+from accounts a
+
+
+# 2
+-- Now see if you can do the same thing for every rep name in the sales_reps table.
+-- Again provide first and last name columns.
+
+select left(s.name, strpos(s.name, ' ') - 1) as first_name, substr(s.name, strpos(s.name, ' ')) as last_name
+from sales_reps s

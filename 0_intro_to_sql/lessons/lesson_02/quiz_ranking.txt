@@ -1,0 +1,11 @@
+# ranking
+# 1
+
+-- Select the id, account_id, and total variable from the orders table,
+-- then create a column called total_rank that ranks this total amount of paper ordered
+-- (from highest to lowest) for each account using a partition.
+-- Your final table should have these four columns.
+
+select o.id, o.account_id, o.total, rank() over (partition by o.account_id order by o.total) as total_rank
+from orders o
+

@@ -1,0 +1,39 @@
+# Quiz: CONCAT, LEFT, RIGHT, and SUBSTR
+
+# 1
+-- Suppose the company wants to assess the performance of all the sales representatives.
+-- Each sales representative is assigned to work in a particular region.
+-- To make it easier to understand for the HR team, display the concatenated sales_reps.id, ‘_’ (underscore),
+-- and region.name as EMP_ID_REGION for each sales representative.
+
+select concat(s.id,'_', r.name)
+from sales_reps s
+join region r on r.id = s.region_id
+
+
+# 2
+-- From the accounts table, display:
+--  the name of the client,
+--  the coordinate as concatenated (latitude, longitude),
+--  email id of the primary point of contact as
+--      <first letter of the primary_poc><last letter of the primary_poc>@<extracted name and domain from the website>
+
+select a.name, concat('(',a.lat, ',', a.long, ')') as lat_long,
+       concat( left(a.primary_poc,1),right(a.primary_poc,1),'@',substr(a.website,5)) as poc_email
+from accounts a
+
+
+# 3
+-- From the web_events table, display
+--      the concatenated value of account_id, '_' , channel, '_', count of web events of the particular channel.
+
+-- Corrected after seeing that I didn't have the output correct last try.
+
+with t1 as
+    (
+        select w1.account_id, w1.channel, count(*) as cnt
+        from web_events w1
+        group by 1,2
+    )
+select concat(t1.account_id,'_',t1.channel,'_',t1.cnt)
+from t1;

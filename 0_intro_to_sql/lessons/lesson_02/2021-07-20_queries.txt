@@ -1,0 +1,29 @@
+# hopefully we setup a database soon, because using the web UI lacks space
+
+# query 1
+select a.name, a.primary_poc, w.occurred_at, w.channel
+from web_events w
+join accounts a
+on w.account_id = a.id
+where a.name = 'Walmart'
+
+
+# query 2
+select r.name, s.name, a.name
+from sales_reps s
+join region r
+on s.region_id = r.id
+join accounts a
+on s.id = a.sales_rep_id
+order by a.name
+
+
+# query 3
+select r.name, o.id, a.name, o.total_amt_usd/(total + .01) as unit_price
+from orders o
+join accounts a
+on o.account_id = a.id
+join sales_reps s
+on a.sales_rep_id = s.id
+join region r
+on s.region_id = r.id
