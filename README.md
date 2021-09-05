@@ -1,2 +1,7 @@
-# udacity-nano-sql
-Course work related the Udacity SQL Nanodegree
+# SQL Nanodegree
+Course work related the Udacity SQL Nanodegree.
+* Deforestation Exploration - Given tables related to forestation and total land data for countries from 1990 through 2016, create a view to answer questions about forestation changes during this period, and provide answer to questions in a written report.
+* Udiddit, A Social News Aggregator - Given a poorly designed database tables, create a new normalized and performant schema, and migrate the data to the new schema.
+
+The database used in the course was Postgresql 9.5.
+
