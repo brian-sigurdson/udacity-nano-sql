@@ -7,7 +7,7 @@ Course work related the Udacity SQL Nanodegree.
 * * * [Regional Outlook SQL](https://github.com/brian-sigurdson/udacity-nano-sql/blob/main/0_intro_to_sql/project/regional_outlook.sql)
 * * * [Country Level SQL](https://github.com/brian-sigurdson/udacity-nano-sql/blob/main/0_intro_to_sql/project/country_level_detail.sql)
 * * * [Recommendations SQL](https://github.com/brian-sigurdson/udacity-nano-sql/blob/main/0_intro_to_sql/project/recommendations.sql)
-* Udiddit, A Social News Aggregator - Given a poorly designed database tables, create a new normalized and effective schema, and migrate the data to the new schema.
+* Udiddit, A Social News Aggregator - Given poorly designed database tables, create a new normalized and effective schema, and migrate the data to the new schema.
 * * [Udiddit_a_social_news_aggregator.pdf](https://github.com/brian-sigurdson/udacity-nano-sql/tree/main/1_mgmt_rdbms_nosql/project/Udiddit_a_social_news_aggregator.pdf)
 * * * [New Schema](https://github.com/brian-sigurdson/udacity-nano-sql/blob/main/1_mgmt_rdbms_nosql/project/udiddit_ddl.sql)
 * * * [Migrate Data](https://github.com/brian-sigurdson/udacity-nano-sql/blob/main/1_mgmt_rdbms_nosql/project/udiddit_migration.sql)
