@@ -5,3 +5,4 @@ Course work related the Udacity SQL Nanodegree.
 
 The database used in the course was Postgresql 9.5.
 
+[udacity_nano_sql.pdf](https://github.com/brian-sigurdson/udacity-nano-sql/files/7111717/udacity_nano_sql.pdf)
