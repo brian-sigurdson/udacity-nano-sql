@@ -15,3 +15,5 @@ Coursework for the Udacity SQL Nanodegree.  The course had two projects that are
 The database used in the course was Postgresql 9.5.
 
 [Certificate of Completion](https://confirm.udacity.com/KDDEUMDS)
+
+See my [Udacity SQL](http://www.bks.name/udacity/udacity-nano-sql.html) page for additional details.
